@@ -1,0 +1,76 @@
+Develop Average Calculator HTTP Microservice
+Create an Average Calculator microservice that exposes a REST API "numbers/{numberid}" that exclusively accepts qualified number IDs.
+Qualified IDs include 'p' for prime, 'f' for Fibonacci, 'e' for even, and 'r' for random numbers. 
+Configure a window size, e.g., 10.
+Upon each request, fetch numbers from a third-party server and store them. Avoid implementing APIs for generating even, prime, etc., numbers; solely rely on the provided Test Server API.
+Ensure stored numbers are unique, disregarding duplicates. Ignore responses taking longer than 500 ms or encountering errors.
+If stored numbers are fewer than the window size, calculate their average. Limit stored numbers to the window size. Upon breaching the window size, replace the oldest number with the newest one.
+Respond to each request with the numbers stored before and after the latest API call, along with the average of numbers matching the window size.
+Maintain quick responses, never exceeding 500 milliseconds. Format response as follows:
+{
+   "windowPrevState": [],
+   "windowCurrState": [1, 3, 5, 7],
+   "numbers": [1, 3, 5, 7], // response received from 3rd party server
+   "avg": 4.00
+}
+
+Test Case
+Assuming the window size to be set as 10 and your server running on localhost port 9876.
+Request
+http://localhost:9876/numbers/e
+
+1st Response
+{
+   "windowPrevState": [],
+   "windowCurrState": [2, 4, 6, 8],
+   "numbers": [2, 4, 6, 8], // response received from 3rd party server
+   "avg": 5.00
+}
+
+2nd Response
+{
+   "windowPrevState": [2, 4, 6, 8],
+   "windowCurrState": [12, 14, 16, 18, 20, 22, 24, 26, 28, 30],
+   "numbers": [6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30],
+   "avg": 23.40
+}
+
+Test Server APIs
+For your convenience, we are giving you a test server with the following APIs that returns numbers of a particular type - prime, fibonacci, even and random. 
+Prime Numbers API
+Request
+http://20.244.56.144/evaluation-service/primes
+
+Response
+{ 
+   "numbers": [2,3,5,7,11]
+}
+
+Fibonacci Numbers API
+Request
+http://20.244.56.144/evaluation-service/fibo
+
+Response
+{
+   "numbers": [55,89,144,233,377,610,987,1597,2584,4181,6765]
+}
+
+Even Numbers API
+Request
+http://20.244.56.144/evaluation-service/even
+
+Response
+{
+"numbers": [8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56]
+}
+
+Random Numbers API
+Request
+http://20.244.56.144/evaluation-service/rand
+
+Response
+{
+   "numbers": [2,19,25,7,4,24,17,27,30,21,14,10,23]
+}
+
+
